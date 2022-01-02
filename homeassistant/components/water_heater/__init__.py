@@ -59,6 +59,7 @@ SUPPORT_TARGET_TEMPERATURE = 1
 SUPPORT_OPERATION_MODE = 2
 SUPPORT_AWAY_MODE = 4
 
+ATTR_TARGET_TEMP_STEP = "target_temp_step"
 ATTR_MAX_TEMP = "max_temp"
 ATTR_MIN_TEMP = "min_temp"
 ATTR_AWAY_MODE = "away_mode"
@@ -157,6 +158,7 @@ class WaterHeaterEntity(Entity):
     _attr_supported_features: int
     _attr_target_temperature_high: float | None = None
     _attr_target_temperature_low: float | None = None
+    _attr_target_temperature_step: float | None = None
     _attr_target_temperature: float | None = None
     _attr_temperature_unit: str
 
@@ -191,6 +193,9 @@ class WaterHeaterEntity(Entity):
 
         if supported_features & SUPPORT_OPERATION_MODE:
             data[ATTR_OPERATION_LIST] = self.operation_list
+
+        if self.target_temperature_step:
+            data[ATTR_TARGET_TEMP_STEP] = self.target_temperature_step
 
         return data
 
@@ -260,6 +265,11 @@ class WaterHeaterEntity(Entity):
     def target_temperature(self) -> float | None:
         """Return the temperature we try to reach."""
         return self._attr_target_temperature
+
+    @property
+    def target_temperature_step(self) -> float | None:
+        """Return the supported step of target temperature."""
+        return self._attr_target_temperature_step
 
     @property
     def target_temperature_high(self) -> float | None:
